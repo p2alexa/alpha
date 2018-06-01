@@ -3,10 +3,10 @@
 #importing essential libs
 import speech_recognition as sr
 import os,time,webbrowser
-from espeak import espeak
+#from espeak import espeak
 import subprocess
 from gtts import gTTS
-import pyttsx
+#import pyttsx
 from io import BytesIO
 import shutil
 
@@ -39,13 +39,17 @@ def listen():
 	with mic as source:
 		#reduce the ambient noise
 		r.adjust_for_ambient_noise(source)
-		audio=r.listen(source)
+		print("speak...")
+		audio=r.listen(source,timeout=10)
+	print("recognizing voice...")
 	text=r.recognize_google(audio)
 	text_t=text.lower()
+	print("voice recognized...")
 	return (text_t)
 
 #function for text-to-speech
-a="lol"
+'''a="lol"
+'''
 def speak(a):
 	tts = gTTS(text=a, lang='en')
 	tts.save("good.mp3")
@@ -54,7 +58,7 @@ def speak(a):
 
 #function for cleaning path list 
 def clean_path(path):
-	paths=path.split()                    #cconditions to clean "in" and " " etc can be added
+	paths=path.split()                    #conditions to clean "in" and " " etc can be added
 	return paths
 
 
@@ -66,26 +70,28 @@ def clean_path(path):
 def main():
     print(x)
     speak("what do you want to do")
-    #text_t=listen()
-    #print (text_t)
-    text_t=str(input("what: ")).lower()
+    text_t=listen()
+    print (text_t)
+    #text_t=str(input("what: ")).lower()
 
     #to make new directory
     if "make" in text_t and "directory" in text_t:
     	speak("where do you want to create a directory")
     	print ("current directory or other directory")
-    	loc=str(input("where: "))  
-    	#loc=listen()
+    	#loc=str(input("where: "))  
+    	loc=listen()
     	print (loc)    	
     	if loc == "current directory":
-    		#speak("what is the directory name")
-    		#name=listen()
-    		name=str(input("name: "))
+    		speak("what is the directory name")
+    		name=listen()
+    		#name=str(input("name: "))
     		#making directory at current location
-    		os.system('mkdir '+name).lower()
+    		x=os.system('mkdir '+name.lower())		
+		if(x==1):
+			print("directory sucessfully created")
     	elif loc=="other directory":
-    		#path=listen()
-    		path=str(input("where: ")).lower()
+    		path=listen()
+    		#path=str(input("where: ")).lower()
     		path_f=clean_path(path)
     		y=""
     		for a in path_f:
@@ -144,7 +150,7 @@ def main():
     if "close" in text_t and "directory" in text_t:
     	if "all" in text_t:
     		os.system('killall nautilus')
-    	os.system('nautilus -q')
+    	#os.system('nautilus -q')
 
     #empty a directory
     if "empty" in text_t and "directory" in text_t:
@@ -165,22 +171,20 @@ def main():
     if "duplicate" in text_t and "directory" in text_t:
     	#path=listen()
     	#speak("which directory")
-								path=str(input("which: ")).lower()
-								if len(path)==1:
-												y=path
+        path=str(input("which: ")).lower()
+        if (len(path)==1):
+            y=path
 
-								else:
-									path_f=clean_path(path)
-									y=""
-									for a in path_f:
-													y=y+str(a)+"/"
-													print(y)
-								z=""
-								z=y[-1]+"1"
-								print(z)
-								shutil.copytree(y,z)
-
-
+        else:
+            path_f=clean_path(path)
+            y=""
+            for a in path_f:
+                y=y+str(a)+"/"
+                print(y)
+        z=""
+        z=y[-1]+"1"
+        print(z)
+        shutil.copytree(y,z)
 main()
 
 
