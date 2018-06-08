@@ -19,10 +19,10 @@ you can perform multiple tasks:
 
 2.Say "Remove directory" to delete a directory.
 
-3. Say "List directories" to list the directories at a loction by:
+3. Say "List directories" to list the directories at a location by:
        1.all directories.
        2.by size.
-       3.by type.
+       3.include hidden.
 
 4.Say "open directory" Open a directory.
 
@@ -37,9 +37,11 @@ def listen():
 	r=sr.Recognizer()
 	mic=sr.Microphone()
 	with mic as source:
+		print("please speak now...")
 		#reduce the ambient noise
 		r.adjust_for_ambient_noise(source)
 		audio=r.listen(source)
+	print("recognising")
 	text=r.recognize_google(audio)
 	text_t=text.lower()
 	return (text_t)
@@ -77,13 +79,13 @@ def main():
     	loc=str(input("where: "))  
     	#loc=listen()
     	print (loc)    	
-    	if loc == "current directory":
+    	if "current" in loc and "directory" in loc:
     		#speak("what is the directory name")
     		#name=listen()
     		name=str(input("name: "))
     		#making directory at current location
     		os.system('mkdir '+name).lower()
-    	elif loc=="other directory":
+    	elif "other" in loc and "directory" in loc::
     		#path=listen()
     		path=str(input("where: ")).lower()
     		path_f=clean_path(path)
@@ -97,7 +99,7 @@ def main():
     		os.system('mkdir '+y+name)
 
     #to remove a directory
-    if text_t == "remove directory":
+    if "remove" in text_t and "directory" in text_t:
     	#speak("which directory")
     	#direc=listen()
     	direc=str(input("which: "))
